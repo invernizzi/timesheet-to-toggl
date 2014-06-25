@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+require 'csv'
+if ARGV.count < 2
+  puts 'Command: ./convert <INPUT_CSV> <OUTPUT_CSV>'
+  exit!
+end
+input_text = File.read(ARGV[0])
+input_csv = CSV.parse(input_text, headers: true, col_sep: ",", quote_char:  '"')
+CSV.open(ARGV[1], "w") do |output_csv|
+  output_csv << [
+    "Email",
+    "Client",
+    "Project",
+    "Start date",
+    "Start time",
+    "Duration"
+  ]
+  input_csv.map do |a|
+    output_csv << [
+      "ADD YOUR EMAIL HERE",
+      "ADD YOUR CLIENT HERE",
+      "ADD YOUR PROJECT DESCRIPTION",
+      DateTime.parse(a["Date"]).strftime('%Y-%m-%d'),
+      "#{a['Start time']}:00",
+      Time.at(a['rel. Duration'].to_f*60*60).utc.strftime('%H:%M:%S')
+    ]
+  end
+end
